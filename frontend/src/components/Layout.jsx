@@ -7,6 +7,8 @@ const Layout = () => {
   return (
     <>
       <Header />
+      {/* "   max-md:mt-12 mt-16 pt-2  px-3 " */}
+ 
          <Outlet />
       <Footer />
     </>
