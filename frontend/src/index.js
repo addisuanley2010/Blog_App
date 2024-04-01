@@ -9,16 +9,17 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import UserProfile from "./pages/UserProfile";
-import Authors from "./pages/AuthorPost";
+import Authors from "./pages/Author";
 import CreatePost from "./pages/CreatePost";
 
 import CatagoryPosts from "./pages/CatagoryPost";
-import AuthorPosts from "./pages/AuthorPost";
+import AuthorsPosts from "./pages/AuthorsPosts";
 import Dashboard from "./pages/Dashbord";
 import EditPost from "./pages/EditPost";
 import Logout from "./pages/Logout";
 
 import PostDetail from "./pages/PostDetail";
+import DeletePost from "./pages/DeletePost";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -35,8 +36,9 @@ const router = createBrowserRouter([
       { path: "create", element: <CreatePost /> },
       { path: "posts/catagories/:catagory", element: <CatagoryPosts /> },
 
-      { path: "posts/users/:id", element: <AuthorPosts /> },
+      { path: "posts/users/:id", element: <AuthorsPosts /> },
       { path: "mypost", element: <Dashboard /> },
+      { path: "post/:id/delete", element: <DeletePost /> },
 
       { path: "post/:id/edit", element: <EditPost /> },
       { path: "logout", element: <Logout /> },

@@ -5,6 +5,7 @@ import { FaBars } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import MobileNav from "./MobileNav";
 
+
 const Header = () => {
   const [mobile, setmobile] = useState(false);
 
@@ -24,15 +25,20 @@ const Header = () => {
           />
         </Link>
         {mobile ? (
-          <AiOutlineClose onClick={handleNav} className="sm:hidden text-3xl cursor-pointer" />
+          <AiOutlineClose
+            onClick={handleNav}
+            className="sm:hidden text-3xl cursor-pointer"
+          />
         ) : (
-          <FaBars className="sm:hidden text-3xl cursor-pointer" onClick={handleNav} />
+          <FaBars
+            className="sm:hidden text-3xl cursor-pointer"
+            onClick={handleNav}
+          />
         )}
         <ul className="flex space-x-8  text-lg text-gray-950 font-serif  max-sm:hidden">
-          <li>
-            <Link to={"/profile/1"}>Addisu Anley</Link>
-          </li>
-
+            <Link to={"/profile/1"}>
+              <img src={blog1} alt="no" className="bg-white rounded-full w-10 h-10" />
+            </Link>
           <li>
             <Link to={"/create"}>Create Post</Link>
           </li>

@@ -2,7 +2,7 @@ import React from 'react'
 
 const Logout = () => {
   return (
-    <div>Logout</div>
+<div className=' max-md:mt-12 mt-16 pt-2  px-3'>Logout</div>
   )
 }
 

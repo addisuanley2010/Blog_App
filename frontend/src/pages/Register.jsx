@@ -3,26 +3,26 @@ import { Link } from "react-router-dom";
 import Button from "../utl/Button";
 
 const Register = () => {
-  const [name, setname] = useState("");
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
-  const [confirmPassword, setconfirmPassword] = useState("");
+  const [user, setuser] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
   const [error, seterror] = useState(false);
 
-  const postData = [
-    {
-      name,
-      email,
-      password,
-      confirmPassword,
-    },
-  ];
+  const handleInputCahnge = (e) => {
+    setuser((prevstate) => {
+      return { ...prevstate, [e.target.name]: e.target.value };
+    });
+  };
+
   const handleSubmit = () => {
-    !email || !password || !name || !confirmPassword
+    !user.email || !user.password || !user.name || !user.confirmPassword
       ? seterror(true)
       : seterror(false);
-
-    console.log(postData);
+    console.log(user);
   };
 
   return (
@@ -40,40 +40,32 @@ const Register = () => {
           type="text"
           name="name"
           placeholder="Name"
-          value={name}
-          onChange={(e) => {
-            setname(e.target.value);
-          }}
+          value={user.name}
+          onChange={handleInputCahnge}
           className="border-2 h-10 px-4 m-2 rounded-lg "
         />
         <input
           type="email"
           name="email"
           placeholder="Email"
-          value={email}
-          onChange={(e) => {
-            setemail(e.target.value);
-          }}
+          value={user.email}
+          onChange={handleInputCahnge}
           className="border-2 h-10 px-4 m-2 rounded-lg "
         />
         <input
           type="password"
           name="password"
           placeholder="Password"
-          value={password}
-          onChange={(e) => {
-            setpassword(e.target.value);
-          }}
+          value={user.password}
+          onChange={handleInputCahnge}
           className="border-2 h-10 px-4 m-2 rounded-lg "
         />
         <input
           type="password"
           name="confirmPassword"
           placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => {
-            setconfirmPassword(e.target.value);
-          }}
+          value={user.confirmPassword}
+          onChange={handleInputCahnge}
           className="border-2 h-10 px-4 m-2 rounded-lg "
         />
         <Button handleSubmit={handleSubmit} />

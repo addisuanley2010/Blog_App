@@ -1,89 +1,36 @@
-import React from "react";
-import avatar1 from "../assets/avatar1.jpg";
-import avatar2 from "../assets/avatar2.jpg";
-import avatar3 from "../assets/avatar3.jpg";
+import React ,{useState} from "react";
+
 import PostView from "../utl/PostView";
-
+import dummyData from "../utl/dummyData";
 const Home = () => {
-  const dummyData = [
-    {
-      postId: "1",
-      catagory: "education",
-      title: "quality educations for all ",
-      description:
-        " vcusantium quas nisi reprehenderit perspiciatis enim iusto laudantiumculpa nulla sequi non, autem labore vel et veniam similique. Isteconsequuntur perspiciatis eum, id dolorem aspernatur vitae neque errorrepudiandae, obcaecati laudantium architecto.",
-      authorId: "1",
-      thumnbinal: avatar1,
-    },
-    {
-      postId: "1",
-      catagory: "education",
-      title: "quality educations for all ",
-      description:
-        " vcusantium quas nisi reprehenderit perspiciatis enim iusto laudantiumculpa nulla sequi non, autem labore vel et veniam similique. Isteconsequuntur perspiciatis eum, id dolorem aspernatur vitae neque errorrepudiandae, obcaecati laudantium architecto.",
-      authorId: "1",
-      thumnbinal: avatar2,
-    },
-    {
-      postId: "1",
-      catagory: "education",
-      title: "quality educations for all ",
-      description:
-        " vcusantium quas nisi reprehenderit perspiciatis enim iusto laudantiumculpa nulla sequi non, autem labore vel et veniam similique. Isteconsequuntur perspiciatis eum, id dolorem aspernatur vitae neque errorrepudiandae, obcaecati laudantium architecto.",
-      authorId: "1",
-      thumnbinal: avatar1,
-    },
-    {
-      postId: "1",
-      catagory: "education",
-      title: "quality educations for all ",
-      description:
-        " vcusantium quas nisi reprehenderit perspiciatis enim iusto laudantiumculpa nulla sequi non, autem labore vel et veniam similique. Isteconsequuntur perspiciatis eum, id dolorem aspernatur vitae neque errorrepudiandae, obcaecati laudantium architecto.",
-      authorId: "1",
-      thumnbinal: avatar1,
-    },
-    {
-      postId: "1",
-      catagory: "education",
-      title: "quality educations for all ",
-      description:
-        " vcusantium quas nisi reprehenderit perspiciatis enim iusto laudantiumculpa nulla sequi non, autem labore vel et veniam similique. Isteconsequuntur perspiciatis eum, id dolorem aspernatur vitae neque errorrepudiandae, obcaecati laudantium architecto.",
-      authorId: "1",
-      thumnbinal: avatar1,
-    },
-
-    {
-      postId: "1",
-      catagory: "education",
-      title: "quality educations for all ",
-      description:
-        " vcusantium quas nisi reprehenderit perspiciatis enim iusto laudantiumculpa nulla sequi non, autem labore vel et veniam similique. Isteconsequuntur perspiciatis eum, id dolorem aspernatur vitae neque errorrepudiandae, obcaecati laudantium architecto.",
-      authorId: "1",
-      thumnbinal: avatar3,
-    },
-    {
-      postId: "1",
-      catagory: "education",
-      title: "quality educations for all ",
-      description:
-        " vcusantium quas nisi reprehenderit perspiciatis enim iusto laudantiumculpa nulla sequi non, autem labore vel et veniam similique. Isteconsequuntur perspiciatis eum, id dolorem aspernatur vitae neque errorrepudiandae, obcaecati laudantium architecto vcusantium quas nisi reprehenderit perspiciatis enim iusto laudantiumculpa nulla sequi non, autem labore vel et veniam similique. Isteconsequuntur perspiciatis eum, id dolorem aspernatur vitae neque errorrepudiandae, obcaecati laudantium architectovcusantium quas nisi reprehenderit perspiciatis enim iusto laudantiumculpa nulla sequi non, autem labore vel et veniam similique. Isteconsequuntur perspiciatis eum, id dolorem aspernatur vitae neque errorrepudiandae, obcaecati laudantium architectovcusantium quas nisi reprehenderit perspiciatis enim iusto laudantiumculpa nulla sequi non, autem labore vel et veniam similique. Isteconsequuntur perspiciatis eum, id dolorem aspernatur vitae neque errorrepudiandae, obcaecati laudantium architectovcusantium quas nisi reprehenderit perspiciatis enim iusto laudantiumculpa nulla sequi non, autem labore vel et veniam similique. Isteconsequuntur perspiciatis eum, id dolorem aspernatur vitae neque errorrepudiandae, obcaecati laudantium architectovcusantium quas nisi reprehenderit perspiciatis enim iusto laudantiumculpa nulla sequi non, autem labore vel et veniam similique. Isteconsequuntur perspiciatis eum, id dolorem aspernatur vitae neque errorrepudiandae, obcaecati laudantium architecto.",
-      authorId: "1",
-      thumnbinal: avatar1,
-    },
-    {
-      postId: "1",
-      catagory: "education",
-      title:
-        "quality educations for all  reprehendesequuntur perspiciatis eum ",
-      description:
-        " vcusantium quas nisi reprehendesequuntur perspiciatis eum, id dolorem aspernatur vitae neque",
-      authorId: "1",
-      thumnbinal: avatar1,
-    },
-  ];
+  const [post, setpost] = useState(dummyData)
   return (
     <div className="   max-md:mt-12 mt-16 pt-2  px-3 ">
-      <PostView dummyData={dummyData} />
+      {post.length > 0 ? (
+        <div className="md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 bg-gray-100 gap-x-0">
+          {post.map(
+            ({
+              postId,
+              catagory,
+              title,
+              description,
+              authorId,
+              thumnbinal,
+            }) => (
+              <PostView
+                postId={postId}
+                authorId={authorId}
+                catagory={catagory}
+                title={title}
+                description={description}
+                thumnbinal={thumnbinal}
+              />
+            )
+          )}
+        </div>
+      ) : (
+        <div className="py-8 md:p-12 justify-center flex ">No Posts Found!</div>
+      )}
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React ,{useState} from "react";
 
 import PostView from "../utl/PostView";
 import dummyData from "../utl/dummyData";
-const CatagoryPost = () => {
+const AuthorsPosts = () => {
   const [post, setpost] = useState(dummyData)
   return (
     <div className="   max-md:mt-12 mt-16 pt-2  px-3 ">
@@ -36,4 +36,7 @@ const CatagoryPost = () => {
 };
 
 
-export default CatagoryPost
+
+
+
+export default AuthorsPosts
