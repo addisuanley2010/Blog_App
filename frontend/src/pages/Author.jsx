@@ -1,24 +1,57 @@
-import React, { useState } from "react";
-import dummyData from "../utl/dummyData";
+import React, { useState ,useEffect} from "react";
+
+import avatar4 from '../assets/avatar4.jpg'
 import { Link } from "react-router-dom";
+import Loader from "./Loader";
+import axios from "axios";
+import { BASE_URL } from "../utl/config";
 const Author = () => {
-  const [authors, setauthors] = useState(dummyData);
+  const [authors, setauthors] = useState([]);
+const [loading, setloading] = useState(false)
+
+
+useEffect(() => {
+  
+
+const fetchPosts=async()=>{
+  setloading(true)
+  try {
+    const response=await axios.get(`${BASE_URL}/users`)
+    setauthors(response?.data.authors)
+    console.log(response?.data.authors)
+  } catch (error) {
+    console.log(error.message)
+  }
+  setloading(false)
+}
+
+fetchPosts()
+
+}, [])
+
+
+
+if(loading){
+  return <Loader/>
+}
+
+
   return (
     <div className=" max-md:mt-12 mt-16 pt-2  px-3">
       {authors.length > 0 ? (
         <div className=" flex-col grid md:grid-cols-2 gap-x-4 lg:grid-cols-3 xl:grid-cols-4">
           {authors.map((author) => {
             return (
-              <Link to={`/posts/users/${author.authorId}`}>
+              <Link to={`/posts/users/${author._id}`}>
                 <div className="flex border-2 p-2 m-1 rounded-md w-full gap-x-4 italic hover:bg-gray-800 hover:text-white cursor-pointer">
                   <img
-                    src={author.thumnbinal}
+                    src={avatar4}
                     alt=""
                     className="w-12 h-12 rounded-full "
                   />
                   <span>
-                    <p>Addisu Anley</p>
-                    <p>{author.postId}</p>
+                    <p>{author.name}</p>
+                    <p>{author.posts} posts</p>
                   </span>
                 </div>
               </Link>

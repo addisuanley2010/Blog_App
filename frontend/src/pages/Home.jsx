@@ -1,29 +1,54 @@
-import React ,{useState} from "react";
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import PostView from "../utl/PostView";
-import dummyData from "../utl/dummyData";
+import Loader from "./Loader";
+
+import { BASE_URL } from "../utl/config";
 const Home = () => {
-  const [post, setpost] = useState(dummyData)
+  const [post, setpost] = useState([]);
+  const [loading, setloading] = useState(false);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setloading(true);
+      try {
+        const response = await axios.get(`${BASE_URL}/posts`);
+        setpost(response?.data.message);
+      } catch (error) {
+        console.log(error.message);
+      }
+      setloading(false);
+    };
+
+    fetchPosts();
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className="   max-md:mt-12 mt-16 pt-2  px-3 ">
       {post.length > 0 ? (
         <div className="md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 bg-gray-100 gap-x-0">
           {post.map(
             ({
-              postId,
+              _id,
               catagory,
               title,
               description,
-              authorId,
+              creator,
               thumnbinal,
+              updatedAt,
             }) => (
               <PostView
-                postId={postId}
-                authorId={authorId}
+                postId={_id}
+                authorId={creator}
                 catagory={catagory}
                 title={title}
                 description={description}
                 thumnbinal={thumnbinal}
+                updatedAt={updatedAt}
               />
             )
           )}

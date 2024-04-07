@@ -1,18 +1,32 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import avatar3 from "../assets/avatar3.jpg";
 import { AiFillBuild, AiFillEdit } from "react-icons/ai";
+import { UserContext } from "../context/UserContext";
 
 const UserProfile = () => {
+  const { currentUser } = useContext(UserContext);
+
   const [user, setuser] = useState({
-    name: "",
-    email: "",
+    name: currentUser?.name,
+    email: currentUser?.email,
     password: "",
     newPassword: "",
     confirmPassword: "",
   });
   // const [profileImage, setprofileImage] = useState(null);
   const [error, seterror] = useState(false);
+
+  const token = currentUser?.token;
+
+  const email = currentUser?.email;
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, []);
   const handleInputCahnge = (e) => {
     setuser((prevstate) => {
       return { ...prevstate, [e.target.name]: e.target.value };

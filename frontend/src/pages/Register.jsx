@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../utl/Button";
-
+import axios from "axios";
+import { BASE_URL } from "../utl/config";
+import { toast } from "react-toastify";
 const Register = () => {
   const [user, setuser] = useState({
     name: "",
@@ -10,7 +12,8 @@ const Register = () => {
     confirmPassword: "",
   });
 
-  const [error, seterror] = useState(false);
+  const navigate = useNavigate();
+  const [error, seterror] = useState("");
 
   const handleInputCahnge = (e) => {
     setuser((prevstate) => {
@@ -18,20 +21,37 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = () => {
-    !user.email || !user.password || !user.name || !user.confirmPassword
-      ? seterror(true)
-      : seterror(false);
-    console.log(user);
+  const handleSubmit = async (e) => {
+
+    try {
+      const response = await axios.post(`${BASE_URL}/users/register`, user);
+
+      const newUserData = await response.data;
+      if (newUserData.success) {
+        toast.success(newUserData.success, {
+          position: "top-center",
+          autoClose: 1000,
+          width: "800px",
+        });
+
+        navigate("/login");
+      } else {
+        toast.error(newUserData.message, {
+          position: "top-center",
+          autoClose: 1000,
+          width: "800px",
+        });
+      }
+    } catch (error) {
+      seterror(error.message);
+    }
   };
 
   return (
     <div className="max-md:mt-12 mt-16 pt-2  px-3 flex flex-col items-center ">
       <div className="flex flex-col">
-        <span className="text-sky-600 text-2xl my-4">Sign Up</span>
-        <span className={`text-red-600 ${error ? "" : "hidden"}`}>
-          fill all the filds
-        </span>
+        <span className="text-sky-600 text-2xl mt-4 mb-6">Sign Up</span>
+        {error && <span className="text-red-600 ">{error} </span>}
       </div>
 
       <div className="flex flex-col">

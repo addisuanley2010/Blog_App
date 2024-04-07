@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 const EditPost = () => {
   const [catagory, setcatagory] = useState("");
   const [title, settitle] = useState("");
@@ -14,6 +16,17 @@ const EditPost = () => {
     "Investment",
     "Weather",
   ];
+  const { currentUser } = useContext(UserContext);
+
+  const token = currentUser?.token;
+
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, []);
 
   const handleSubmit = () => {
     console.log(catagory, title, descrption, thumbinal);
@@ -23,14 +36,15 @@ const EditPost = () => {
     <div className=" max-md:mt-12 mt-16 pt-2  px-3 flex flex-col items-center">
       <span className="text-2xl text-gray-800 py-2 ">Edit Post</span>
       <div className="flex flex-col px-4">
-        <p className="text-red-500 italic text-xs hidden">Error displayed here</p>
+        <p className="text-red-500 italic text-xs hidden">
+          Error displayed here
+        </p>
         <input
           type="text"
           placeholder="Title"
           value={title}
           onChange={(e) => settitle(e.target.value)}
           className="border px-4 h-8 my-2"
-
         />
         <select
           name="catagory"
@@ -80,5 +94,4 @@ const EditPost = () => {
   );
 };
 
-
-export default EditPost
+export default EditPost;

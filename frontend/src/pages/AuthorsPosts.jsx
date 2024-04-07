@@ -1,25 +1,43 @@
-import React ,{useState} from "react";
-
+import React, { useState, useEffect } from "react";
+import { BASE_URL } from "../utl/config";
 import PostView from "../utl/PostView";
 import dummyData from "../utl/dummyData";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import Loader from "./Loader";
 const AuthorsPosts = () => {
-  const [post, setpost] = useState(dummyData)
+  const [post, setpost] = useState([]);
+  const [loading, setloading] = useState(false);
+
+  const { id } = useParams();
+  useEffect(() => {
+    setloading(true);
+    const getPost = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/posts/users/${id}`);
+
+        setpost(response?.data.authorPosts);
+      } catch (error) {
+        console.log(error.message);
+      }
+      setloading(false);
+    };
+    getPost();
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className="   max-md:mt-12 mt-16 pt-2  px-3 ">
-      {post.length > 0 ? (
+      {post?.length > 0 ? (
         <div className="md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 bg-gray-100 gap-x-0">
           {post.map(
-            ({
-              postId,
-              catagory,
-              title,
-              description,
-              authorId,
-              thumnbinal,
-            }) => (
+            ({ _id, catagory, title, description, creator, thumnbinal }) => (
               <PostView
-                postId={postId}
-                authorId={authorId}
+                postId={_id}
+                authorId={creator}
                 catagory={catagory}
                 title={title}
                 description={description}
@@ -35,8 +53,4 @@ const AuthorsPosts = () => {
   );
 };
 
-
-
-
-
-export default AuthorsPosts
+export default AuthorsPosts;

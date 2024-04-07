@@ -12,6 +12,9 @@ import UserProfile from "./pages/UserProfile";
 import Authors from "./pages/Author";
 import CreatePost from "./pages/CreatePost";
 
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 import CatagoryPosts from "./pages/CatagoryPost";
 import AuthorsPosts from "./pages/AuthorsPosts";
 import Dashboard from "./pages/Dashbord";
@@ -20,10 +23,15 @@ import Logout from "./pages/Logout";
 
 import PostDetail from "./pages/PostDetail";
 import DeletePost from "./pages/DeletePost";
+import UserProvider from "./context/UserContext";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: (
+      <UserProvider>
+        <Layout />
+      </UserProvider>
+    ),
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Home /> },
@@ -49,6 +57,7 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
+    <ToastContainer />
     <RouterProvider router={router} />
   </React.StrictMode>
 );
