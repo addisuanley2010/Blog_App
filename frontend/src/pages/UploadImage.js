@@ -26,7 +26,7 @@ const UploadImage = ({ token, imagePath }) => {
     try {
       const formData = new FormData();
       formData.append("image", selectedFile);
-      const response = await axios.put(`${BASE_URL}/edit-profile`, formData, {
+      const response = await axios.put(`${BASE_URL}/users/edit-profile-image`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -73,8 +73,10 @@ const UploadImage = ({ token, imagePath }) => {
           type="submit"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
+          
           Upload
         </button>
+        
       </form>
     </div>
   );

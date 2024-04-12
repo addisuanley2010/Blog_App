@@ -95,9 +95,9 @@ const getSinglePost = async (req, res, next) => {
 // ......................................................
 const getPostsByCatagory = async (req, res, next) => {
   try {
-    const { catagory } = req.params;
+    const { category } = req.params;
     const catagoryPosts = await postModel
-      .find({ catagory })
+      .find({ category })
       .sort({ updatedAt: -1 });
     if (catagoryPosts == "") {
       res.json({
@@ -140,9 +140,9 @@ const getPostsByAutor = async (req, res, next) => {
 // ......................................................
 const editPost = async (req, res, next) => {
   try {
-    const { title, description, catagory } = req.body;
+    const { title, description, category } = req.body;
     const { id } = req.params;
-    if (!title || !description || !catagory) {
+    if (!title || !description || !category) {
       res.json({
         message: "please ,fill all the fields",
       });
@@ -162,7 +162,7 @@ const editPost = async (req, res, next) => {
             id,
             {
               title,
-              catagory,
+            category,
               description,
             },
             { new: true }

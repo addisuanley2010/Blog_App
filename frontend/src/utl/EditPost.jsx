@@ -6,7 +6,7 @@ import axios from "axios";
 import Loader from "../pages/Loader";
 import { toast } from "react-toastify";
 const EditPost = () => {
-  const [catagory, setcatagory] = useState("");
+  const [category, setcatagory] = useState("");
   const [loading, setloading] = useState(false);
   const [title, settitle] = useState("");
   const [descrption, setdescrption] = useState("");
@@ -40,7 +40,7 @@ const EditPost = () => {
         try {
           const response = await axios.get(`${BASE_URL}/posts/${postId.id}`);
           settitle(response?.data.post.title);
-          setcatagory(response?.data.post.catagory);
+          setcatagory(response?.data.post.category);
           setdescrption(response?.data.post.description);
         } catch (error) {
           console.log(error.message);
@@ -56,14 +56,13 @@ const EditPost = () => {
     try {
       const userData = await axios.put(
         `${BASE_URL}/posts/${postId.id}`,
-        { title, description:descrption, catagory },
+        { title, description:descrption, category },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log(userData.data.success);
       if (userData.data.success) {
         toast.success(userData.data.success, {
           position: "top-center",
@@ -101,9 +100,9 @@ const EditPost = () => {
           className="border px-4 h-8 my-2"
         />
         <select
-          name="catagory"
+          name="category"
           id=""
-          value={catagory}
+          value={category}
           onChange={(e) => {
             setcatagory(e.target.value);
           }}

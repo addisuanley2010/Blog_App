@@ -10,12 +10,12 @@ const CatagoryPost = () => {
   const [post, setpost] = useState([])
 
 const [loading, setloading] = useState(false)
-const {catagory}=useParams()
+const {category}=useParams()
   useEffect(() => {
     setloading(true);
     const getPost = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/posts/catagories/${catagory}`);
+        const response = await axios.get(`${BASE_URL}/posts/catagories/${category}`);
 
         setpost(response?.data.catagoryPosts);
       } catch (error) {
@@ -24,7 +24,7 @@ const {catagory}=useParams()
       setloading(false);
     };
     getPost();
-  }, [catagory]);
+  }, [category]);
 
 if(loading){
   return <Loader/>
@@ -40,7 +40,7 @@ if(loading){
           {post.map(
             ({
               _id,
-              catagory,
+              category,
               title,
               description,
               creator,
@@ -49,7 +49,7 @@ if(loading){
               <PostView
                 postId={_id}
                 authorId={creator}
-                catagory={catagory}
+                category={category}
                 title={title}
                 description={description}
                 thumnbinal={thumnbinal}

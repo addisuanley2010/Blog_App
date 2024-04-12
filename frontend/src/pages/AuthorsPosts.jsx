@@ -33,11 +33,11 @@ const AuthorsPosts = () => {
       {post?.length > 0 ? (
         <div className="md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 bg-gray-100 gap-x-0">
           {post.map(
-            ({ _id, catagory, title, description, creator, imagePath }) => (
+            ({ _id, category, title, description, creator, imagePath }) => (
               <PostView
                 postId={_id}
                 authorId={creator}
-                catagory={catagory}
+                category={category}
                 title={title}
                 description={description}
                 imagePath={imagePath}

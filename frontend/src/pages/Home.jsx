@@ -34,7 +34,7 @@ const Home = () => {
           {post.map(
             ({
               _id,
-              catagory,
+              category,
               title,
               description,
               creator,
@@ -44,7 +44,7 @@ const Home = () => {
               <PostView
                 postId={_id}
                 authorId={creator}
-                catagory={catagory}
+                category={category}
                 title={title}
                 description={description}
                 imagePath={imagePath}

@@ -60,7 +60,7 @@ const PostDetail = () => {
           alt=""
         />
         <button className="font-semibold bg-gray-100 px-2 py-1 hover:bg-gray-950 hover:text-white  italic border-2 rounded-lg text-xs md:text-lg transition-colors duration-500 absolute bottom-2 right-2">
-          {post.catagory}
+          {post.category}
         </button>
       </div>
 

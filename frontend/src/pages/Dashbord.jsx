@@ -67,7 +67,6 @@ const Dashbord = () => {
                     <button className="  rounded-lg hover:bg-sky-700 hover:text-white px-1 py-1  border h-fit bg-sky-400">
                       edit
                     </button>
-                    {/* <EditPost postId={post._id}/> */}
                   </Link>
                   <Link to={`/post/${post._id}/delete`}>
                     <DeletePost postId={post._id} token={token} />

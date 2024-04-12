@@ -3,6 +3,11 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config");
 
+
+
+
+const cloudinary = require("../cloudinary");
+const fs = require("fs");
 // ......REGISTER USER..........
 // ........UNPROTECTED..........
 
@@ -121,9 +126,39 @@ const getProfile = async (req, res, next) => {
 // .............PROTECTED.................
 
 const changeProfileImg = async (req, res, next) => {
-  res.json({
-    message: "this is from change user profile controller",
-  });
+
+ const { buffer } = req.file;
+  try {
+    const tempFilePath = `/tmp/${req.file.originalname}`;
+
+    fs.writeFileSync(tempFilePath, buffer);
+
+    const cloudinaryUpload = await cloudinary.uploader.upload(tempFilePath, {
+      folder: "profile",
+      width: 300,
+      crop: "scale",
+    });
+
+    fs.unlinkSync(tempFilePath);
+
+    const response = await userModel.findByIdAndUpdate(
+      req.user.id,
+      {
+        imageName: cloudinaryUpload.public_id,
+        imagePath: cloudinaryUpload.secure_url,
+      },
+      { new: true }
+    );
+
+    return res
+      .status(200)
+      .json({ success: "Profile picture updated", response });
+  } catch (error) {
+    console.error("Error saving image to MongoDB:", error.message);
+    return res.status(500).json({ error: "Error saving image" });
+  }
+
+ 
 };
 
 // .....UPDATE USER'S PROFILE..........
