@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../utl/config";
 import { toast } from "react-toastify";
-const UploadImage = ({ token, imageName }) => {
+import Loader from "./Loader";
+
+const UploadImage = ({ token, imagePath }) => {
+  const [loading, setloading] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
     setSelectedFile(file);
 
     if (file) {
@@ -20,10 +22,10 @@ const UploadImage = ({ token, imageName }) => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    setloading(true)
     try {
       const formData = new FormData();
-      formData.append("imagee", selectedFile);
+      formData.append("image", selectedFile);
       const response = await axios.put(`${BASE_URL}/edit-profile`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -43,14 +45,20 @@ const UploadImage = ({ token, imageName }) => {
         });
       }
     } catch (err) {
+      console.log(err.message);
     }
+    setloading(false)
   };
+ if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className="mt-0 pt-0">
       <form onSubmit={handleSubmit} className="mt-4 flex flex-col items-center">
         <div className="relative">
           <img
-            src={'frontend/public/uploads/1712767546264-tempo.jpg'}
+            src={previewUrl ? previewUrl : imagePath}
             alt="Image"
             className="mb-4 rounded-full w-40 h-40 border-2"
           />
@@ -59,7 +67,7 @@ const UploadImage = ({ token, imageName }) => {
           type="file"
           name="image"
           onChange={handleFileChange}
-          className="mb-4 "
+          className="mb-4"
         />
         <button
           type="submit"

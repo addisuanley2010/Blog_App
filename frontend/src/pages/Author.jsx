@@ -1,6 +1,5 @@
 import React, { useState ,useEffect} from "react";
 
-import avatar4 from '../assets/avatar4.jpg'
 import { Link } from "react-router-dom";
 import Loader from "./Loader";
 import axios from "axios";
@@ -45,9 +44,9 @@ if(loading){
               <Link to={`/posts/users/${author._id}`}>
                 <div className="flex border-2 p-2 m-1 rounded-md w-full gap-x-4 italic hover:bg-gray-800 hover:text-white cursor-pointer">
                   <img
-                    src={avatar4}
-                    alt=""
-                    className="w-12 h-12 rounded-full "
+                    src={author.imagePath}
+                    alt="Img"
+                    className="w-12 h-12 rounded-full border-2"
                   />
                   <span>
                     <p>{author.name}</p>

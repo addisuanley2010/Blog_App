@@ -3,7 +3,6 @@ import { AiOutlineLogout } from "react-icons/ai";
 import { FaPeopleArrows, FaPodcast } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
-import avatar7 from "../assets/avatar7.jpg";
 import UserName from "../utl/UserName";
 const MobileNav = ({ setmobile }) => {
   const toggle = () => {

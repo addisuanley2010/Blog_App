@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import avatar9 from "../assets/avatar9.jpg";
 import PostAuthor from "./PostAuthor";
 const PostView = ({
   postId,
@@ -8,14 +7,13 @@ const PostView = ({
   catagory,
   title,
   description,
-  thumnbinal,
   updatedAt,
+  imagePath
 }) => {
   return (
     <div className="flex flex-col bg-white md:m-2 rounded-xl p-2 ">
       <img
-        // src={thumnbinal}
-        src={avatar9}
+        src={imagePath}
         alt={"no content"}
         className=" w-full rounded-xl hover:scale-105 duration-500 "
       />

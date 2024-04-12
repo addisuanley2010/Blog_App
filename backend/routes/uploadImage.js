@@ -1,48 +1,41 @@
 const express = require("express");
 const router = express.Router();
-const multer = require("multer");
-const fs = require("fs");
 const userModel = require("../models/userModel");
+const cloudinary = require("../cloudinary");
+const multer = require("multer");
+const upload = multer();
+const fs = require("fs");
 
-const storage = multer.diskStorage({
-    destination: "../frontend/public/uploads",
-
-
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-const upload = multer({ storage: storage });
-
-router.put("/edit-profile", upload.single("imagee"), async (req, res) => {
+router.put("/edit-profile", upload.single("image"), async (req, res) => {
+  const { buffer } = req.file;
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: "No file provided" });
-    }
+    const tempFilePath = `/tmp/${req.file.originalname}`;
 
-    const previousImage = await userModel.findById(req.user.id, "imagePath");
-    const imagePath = req.file.path;
+    fs.writeFileSync(tempFilePath, buffer);
+
+    const cloudinaryUpload = await cloudinary.uploader.upload(tempFilePath, {
+      folder: "profile",
+      width: 300,
+      crop: "scale",
+    });
+
+    // Delete the temporary file
+    fs.unlinkSync(tempFilePath);
+
     const response = await userModel.findByIdAndUpdate(
       req.user.id,
       {
-        imageName: Date.now() + "-" + req.file.originalname,
-        imagePath: imagePath,
+        imageName: cloudinaryUpload.public_id,
+        imagePath: cloudinaryUpload.secure_url,
       },
       { new: true }
     );
 
-    // Delete the previous image file
-    if (previousImage && previousImage.imagePath) {
-      fs.unlink(previousImage.imagePath, (err) => {
-        if (err) {
-          console.error("Error deleting previous image:", err);
-        }
-      });
-    }
-
-    return res.status(200).json({ success: 'profile picture updated',response });
+    return res
+      .status(200)
+      .json({ success: "Profile picture updated", response });
   } catch (error) {
-    console.error("Error saving image to MongoDB:", error);
+    console.error("Error saving image to MongoDB:", error.message);
     return res.status(500).json({ error: "Error saving image" });
   }
 });

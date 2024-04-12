@@ -6,7 +6,7 @@ const postSchema = new Schema(
       type: String,
       required: true,
     },
-    catagory: {
+    category: {
       type: String,
       required: true,
     },
@@ -21,11 +21,9 @@ const postSchema = new Schema(
     },
     imageName: {
       type: String,
-      default: "no image uploaded",
     },
     imagePath: {
       type: String,
-      default: "no path",
     },
   },
   { timestamps: true }

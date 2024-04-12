@@ -4,9 +4,7 @@ import { UserContext } from "../context/UserContext";
 import axios from "axios";
 import { BASE_URL } from "../utl/config";
 import Loader from "./Loader";
-import avatar10 from "../assets/avatar10.jpg";
 import DeletePost from "../utl/DeletePost";
-import EditPost from "../utl/EditPost";
 const Dashbord = () => {
   const [posts, setposts] = useState({});
   const [loading, setloading] = useState(false);
@@ -49,7 +47,7 @@ const Dashbord = () => {
               <div className="flex justify-between max-sm:px-0 max-sm:text-xs px-4 border rounded-md">
                 <div className="flex gap-x-2 md:gap-4 items-center max-sm:flex-col max-sm:items-start">
                   <img
-                    src={avatar10}
+                    src={post.imagePath}
                     alt="no image here"
                     className="max-sm:h-6 h-12 rounded-md"
                   />

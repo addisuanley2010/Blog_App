@@ -4,19 +4,22 @@ import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utl/config";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Loader from "./Loader";
 
 const CreatePost = () => {
-  const [catagory, setcatagory] = useState("");
-  const [title, settitle] = useState("");
-  const [description, setdescrption] = useState("");
-  const [thumbinal, setthumbinal] = useState(null);
+  const [category, setCategory] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [loading, setloading] = useState(false)
 
-  const CATAGORY = [
-    "uncatagorized",
+  const CATEGORY_OPTIONS = [
+    "uncategorized",
     "Agriculture",
-    "Bussiness",
+    "Business",
     "Education",
-    "entertaiment",
+    "Entertainment",
     "Art",
     "Investment",
     "Weather",
@@ -24,49 +27,74 @@ const CreatePost = () => {
 
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
-  const tok = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!token) {
       navigate("/login");
     }
   }, []);
 
-  const handleSubmit = async () => {
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+
+    if (file) {
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        setPreviewUrl(fileReader.result);
+      };
+      fileReader.readAsDataURL(file);
+    }
+  };
+
+
+  const handleSubmit = async (e) => {
+        setloading(true)
+
+    e.preventDefault()
     try {
-      const userData = await axios.post(
-        `${BASE_URL}/posts`,
-        { title, description, catagory },
-        {
-          headers: {
-            Authorization: `Bearer ${tok.token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(userData.data.success);
-      if (userData.data.success) {
-        toast.success(userData.data.success, {
+      const formData = new FormData();
+      formData.append("image", image);
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("category", category);
+
+      const response = await axios.post(`${BASE_URL}/posts`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.data.success) {
+        toast.success(response.data.success, {
           position: "top-center",
           autoClose: 1000,
           width: "800px",
         });
         navigate("/");
       } else {
-        toast.error(userData.data.message, {
+        toast.error(response.data.message, {
           position: "top-center",
           autoClose: 1000,
           width: "800px",
         });
       }
+
     } catch (error) {
       console.log(error);
     }
+              setloading(false)
+
   };
 
+ if (loading) {
+    return <Loader />;
+  }
+
   return (
-    <div className=" max-md:mt-12 mt-16 pt-2  px-3 flex flex-col items-center">
-      <span className="text-2xl text-gray-800 py-2 ">Create Post</span>
+    <form className="max-md:mt-12 mt-16 pt-2 px-3 flex flex-col items-center">
+      <span className="text-2xl text-gray-800 py-2">Create Post</span>
       <div className="flex flex-col px-4">
         <p className="text-red-500 italic text-xs hidden">
           Error displayed here
@@ -75,45 +103,34 @@ const CreatePost = () => {
           type="text"
           placeholder="Title"
           value={title}
-          onChange={(e) => settitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
           className="border px-4 h-8 my-2"
         />
         <select
-          name="catagory"
-          id=""
-          value={catagory}
-          onChange={(e) => {
-            setcatagory(e.target.value);
-          }}
-          className="border-2 my-2 h-8 px-6  text-slate-950"
+          name="category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="border-2 my-2 h-8 px-6 text-slate-950"
         >
-          {CATAGORY.map((cat) => {
-            return (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            );
-          })}
+          {CATEGORY_OPTIONS.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
         </select>
         <textarea
-          name="descrption"
+          name="description"
           id="description"
           cols="60"
           rows="10"
           value={description}
-          onChange={(e) => {
-            setdescrption(e.target.value);
-          }}
+          onChange={(e) => setDescription(e.target.value)}
           className="border-2 w-full px-8"
         />
         <input
           type="file"
-          name="thuminal"
-          value={thumbinal}
-          onChange={(e) => {
-            setthumbinal(e.target.files[0]);
-          }}
-          accept="jpg ,png, jpeg"
+          name="image"
+          onChange={handleFileChange}
         />
         <button
           onClick={handleSubmit}
@@ -122,7 +139,7 @@ const CreatePost = () => {
           Submit Post
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 

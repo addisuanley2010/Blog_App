@@ -38,7 +38,7 @@ const Home = () => {
               title,
               description,
               creator,
-              thumnbinal,
+              imagePath,
               updatedAt,
             }) => (
               <PostView
@@ -47,7 +47,7 @@ const Home = () => {
                 catagory={catagory}
                 title={title}
                 description={description}
-                thumnbinal={thumnbinal}
+                imagePath={imagePath}
                 updatedAt={updatedAt}
               />
             )

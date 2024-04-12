@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
 
-import avatar1 from "../assets/avatar1.jpg";
 import { Link, useParams } from "react-router-dom";
 import { BASE_URL } from "../utl/config";
 import axios from "axios";
@@ -56,7 +55,7 @@ const PostDetail = () => {
       </div>
       <div className="flex justify-center lg:px-40 md:px-16 pb-4 relative">
         <img
-          src={avatar1}
+          src={post.imagePath}
           className=" w-full lg:w-96 rounded-lg lg:h-96 z-12"
           alt=""
         />

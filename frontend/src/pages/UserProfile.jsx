@@ -10,7 +10,7 @@ import UploadImage from "./UploadImage";
 const UserProfile = () => {
   const { currentUser } = useContext(UserContext);
   const [loading, setloading] = useState(false);
-  const [imageName, setimageName] = useState('')
+  const [imagePath, setimagePath] = useState('')
   const [user, setuser] = useState({
     name: '',
     email:'',
@@ -41,7 +41,7 @@ const UserProfile = () => {
           },
         });
           setuser(response?.data.user);
-          setimageName(response?.data.user.imageName)
+          setimagePath(response?.data.user.imagePath)
         } catch (error) {
           console.log(error.message);
         }
@@ -132,7 +132,7 @@ const UserProfile = () => {
       </Link>
 
 
-      <UploadImage token={token} imageName={imageName}/>
+      <UploadImage token={token} imagePath={imagePath}/>
    
       <div className="flex flex-col">
         {error && (

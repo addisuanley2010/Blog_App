@@ -71,9 +71,7 @@ const userLogin = async (req, res, next) => {
         });
       } else {
         const { _id: id, email, name } = user; // to destructure from database response use reverse order
-        const token = jwt.sign({ id, email }, SECRET_KEY, {
-          expiresIn: "3600s",
-        });
+        const token = jwt.sign({ id, email }, SECRET_KEY);
         res.json({ id, email, name, token, success: "Successfully Login!" });
       }
     }

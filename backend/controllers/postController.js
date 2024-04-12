@@ -1,39 +1,61 @@
 const postModel = require("../models/postModel");
 const userModel = require("../models/userModel");
+const cloudinary = require("../cloudinary");
+
+const fs = require("fs");
 
 const createPost = async (req, res, next) => {
   try {
-    const { title, description, catagory } = req.body;
+    const { title, description, category } = req.body;
+    const { buffer } = req.file;
 
-    if (!title || !description || !catagory) {
+    if (!title || !description || !category) {
       res.json({
-        message: "please , fill all the fields",
+        message: "Please fill all the fields",
       });
     } else {
+      const tempFilePath = `/tmp/${req.file.originalname}`;
+
+      fs.writeFileSync(tempFilePath, buffer);
+
+      const cloudinaryUpload = await cloudinary.uploader.upload(tempFilePath, {
+        folder: "posts",
+        width: 300,
+        crop: "scale",
+      });
+
+      // Delete the temporary file
+      fs.unlinkSync(tempFilePath);
+
       const newPost = await postModel.create({
         title,
-        catagory,
+        category,
         description,
         creator: req.user.id,
+        imageName: cloudinaryUpload.public_id,
+        imagePath: cloudinaryUpload.secure_url,
       });
+
       if (!newPost) {
         res.json({
-          message: "post not created",
+          message: "Post not created",
         });
       } else {
         const currentUser = await userModel.findById(req.user.id);
         const userPostCount = currentUser.posts + 1;
+
         await userModel.findByIdAndUpdate(req.user.id, {
           posts: userPostCount,
         });
+
         res.json({
-          success: "post created successfully!",
+          success: "Post created successfully!",
         });
       }
     }
   } catch (error) {
     res.json({
-      message: error.message,
+      message: "fill all fields",
     });
   }
 };
@@ -61,7 +83,7 @@ const getSinglePost = async (req, res, next) => {
       });
     } else {
       res.json({
-         post,
+        post,
       });
     }
   } catch (error) {
@@ -151,7 +173,7 @@ const editPost = async (req, res, next) => {
             });
           } else {
             res.json({
-              success: 'successfully updated',
+              success: "successfully updated",
             });
           }
         }
