@@ -7,6 +7,7 @@ import { BASE_URL } from "../utl/config";
 import axios from "axios";
 import PostAuthor from "../utl/PostAuthor";
 import Loader from "./Loader";
+import DeletePost from "../utl/DeletePost";
 const PostDetail = () => {
   const { id } = useParams();
   const [post, setpost] = useState({});
@@ -14,14 +15,14 @@ const PostDetail = () => {
 
   const { currentUser } = useContext(UserContext);
   const userId = currentUser?.id;
+  const token = currentUser?.token;
 
   useEffect(() => {
     setloading(true);
     const getPost = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/posts/${id}`);
-
-        setpost(response?.data.message);
+        setpost(response?.data.post);
       } catch (error) {
         console.log(error.message);
       }
@@ -30,9 +31,9 @@ const PostDetail = () => {
     getPost();
   }, []);
 
-if(loading){
-  return <Loader/>
-}
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <div className=" max-md:mt-12 mt-16 pt-2  px-3 ">
       <div className="flex justify-between items-center  lg:px-40 md:px-16">
@@ -48,9 +49,7 @@ if(loading){
               </button>
             </Link>
             <Link to={"delete"}>
-              <button className="bg-red-500 px-3 rounded-lg py-1 hover:bg-red-700 hover:text-white">
-                delete
-              </button>
+              <DeletePost postId={post._id} token={token} />
             </Link>
           </div>
         )}
@@ -67,7 +66,9 @@ if(loading){
       </div>
 
       <div className="flex justify-center lg:px-48 xl:px:60 md:px-16 flex-col ">
-        <span className="border-b-4 pt-0 mb-2 font-medium italic">{post.title}</span>
+        <span className="border-b-4 pt-0 mb-2 font-medium italic">
+          {post.title}
+        </span>
         <p className="italic">{post.description}</p>
       </div>
     </div>

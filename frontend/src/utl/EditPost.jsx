@@ -1,8 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { BASE_URL } from "./config";
+import axios from "axios";
+import Loader from "../pages/Loader";
+import { toast } from "react-toastify";
 const EditPost = () => {
   const [catagory, setcatagory] = useState("");
+  const [loading, setloading] = useState(false);
   const [title, settitle] = useState("");
   const [descrption, setdescrption] = useState("");
   const [thumbinal, setthumbinal] = useState(null);
@@ -20,17 +25,66 @@ const EditPost = () => {
 
   const token = currentUser?.token;
 
+  const id = currentUser?.id;
 
   const navigate = useNavigate();
+  const postId = useParams();
   useEffect(() => {
     if (!token) {
       navigate("/login");
+    } else {
+        console.log(token,'hhhhhhhhhhhhhhhh')
+
+      setloading(true);
+      const myPost = async () => {
+        try {
+          const response = await axios.get(`${BASE_URL}/posts/${postId.id}`);
+          settitle(response?.data.post.title);
+          setcatagory(response?.data.post.catagory);
+          setdescrption(response?.data.post.description);
+        } catch (error) {
+          console.log(error.message);
+        }
+        setloading(false);
+      };
+      myPost();
     }
   }, []);
 
-  const handleSubmit = () => {
-    console.log(catagory, title, descrption, thumbinal);
+ 
+  const handleSubmit = async () => {
+    try {
+      const userData = await axios.put(
+        `${BASE_URL}/posts/${postId.id}`,
+        { title, description:descrption, catagory },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(userData.data.success);
+      if (userData.data.success) {
+        toast.success(userData.data.success, {
+          position: "top-center",
+          autoClose: 1000,
+          width: "800px",
+        });
+        navigate("/");
+      } else {
+        toast.error(userData.data.message, {
+          position: "top-center",
+          autoClose: 1000,
+          width: "800px",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className=" max-md:mt-12 mt-16 pt-2  px-3 flex flex-col items-center">

@@ -5,12 +5,14 @@ import { FaBars } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import MobileNav from "./MobileNav";
 import { UserContext } from "../context/UserContext";
+import UserName from "../utl/UserName";
 
 const Header = () => {
   const [mobile, setmobile] = useState(false);
   const { currentUser } = useContext(UserContext);
 
-  const name  = currentUser?.name;
+    const token  = currentUser?.token;
+
   const handleNav = () => {
     setmobile((prevState) => !prevState);
   };
@@ -39,14 +41,7 @@ const Header = () => {
         )}
         {currentUser?.id && (
           <ul className="flex space-x-8  text-lg text-gray-950 font-serif  max-sm:hidden items-center">
-            <Link to={"/profile/1"}>
-              <img
-                src={blog1}
-                alt="no"
-                className="bg-white rounded-full w-10 h-10"
-              />
-              <p className="text-xs italic">{name}</p>
-            </Link>
+              <UserName authorId={currentUser?.id} token={token}/>
             <li>
               <Link to={"/create"}>Create Post</Link>
             </li>

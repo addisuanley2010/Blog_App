@@ -70,28 +70,26 @@ const userLogin = async (req, res, next) => {
           message: "incorrect credintials",
         });
       } else {
-        const { _id: id, email,name } = user; // to destructure from database response use reverse order
+        const { _id: id, email, name } = user; // to destructure from database response use reverse order
         const token = jwt.sign({ id, email }, SECRET_KEY, {
           expiresIn: "3600s",
         });
-        res.json({ id, email,name, token ,success:"Successfully Login!"});
+        res.json({ id, email, name, token, success: "Successfully Login!" });
       }
     }
   }
 };
 //////////GET AUTHOR BY id.................
 
-
-
 const getAuthorData = async (req, res, next) => {
   try {
     const { id } = req.params;
-  
-      const user = await userModel.findById(id).select("-password");
 
-      if (user) {
-        res.json({message: user });
-      }
+    const user = await userModel.findById(id).select("-password");
+
+    if (user) {
+      res.json({ message: user });
+    }
   } catch (error) {
     res.json({
       message: error.message,
@@ -133,12 +131,64 @@ const changeProfileImg = async (req, res, next) => {
 // .....UPDATE USER'S PROFILE..........
 // ........PROTECTED.................
 
+const changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword, confirmNewPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+      res.json({
+        message: "please fill all the fields",
+      });
+    } else {
+      const user = await userModel.findById(req.user.id);
+
+      if (!user) {
+        res.json({
+          message: "user not found",
+        });
+      } else {
+        const checkPassword = await bcrypt.compare(
+          currentPassword,
+          user.password
+        );
+        if (!checkPassword) {
+          res.json({
+            message: "wrong current password",
+          });
+        } else {
+          if (newPassword != confirmNewPassword) {
+            res.json({ message: "new password do not much" });
+          } else {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+            const newUserPassword = await userModel
+              .findByIdAndUpdate(
+                req.user.id,
+                { password: hashedPassword },
+                { new: true }
+              )
+              .select("-password");
+            res.json({
+              success: "password changed successfully",
+            });
+          }
+        }
+      }
+    }
+  } catch (error) {
+    res.json({
+      message: error.message,
+    });
+  }
+};
+//.............EDIT NAME AND EMAIL .......
+
 const editUserProfile = async (req, res, next) => {
   try {
-    const { name, email, currentPassword, newPassword, confirmNewPassword } =
-      req.body;
+    const { name, email } = req.body;
 
-    if (!name || !email || !currentPassword || !newPassword) {
+    if (!name || !email) {
       res.json({
         message: "please fill all the fields",
       });
@@ -157,33 +207,12 @@ const editUserProfile = async (req, res, next) => {
             message: "email already exist",
           });
         } else {
-          const checkPassword = await bcrypt.compare(
-            currentPassword,
-            user.password
-          );
-          if (!checkPassword) {
-            res.json({
-              message: "wrong current password",
-            });
-          } else {
-            if (newPassword != confirmNewPassword) {
-              res.json({ message: "new password do not much" });
-            } else {
-              const salt = await bcrypt.genSalt(10);
-              const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-              const newUserData = await userModel
-                .findByIdAndUpdate(
-                  req.user.id,
-                  { name, email, password: hashedPassword },
-                  { new: true }
-                )
-                .select("-password");
-              res.json({
-                message: newUserData,
-              });
-            }
-          }
+          const newUserData = await userModel
+            .findByIdAndUpdate(req.user.id, { name, email }, { new: true })
+            .select("-password");
+          res.json({
+            success: "updated successfully!",
+          });
         }
       }
     }
@@ -222,5 +251,6 @@ module.exports = {
   editUserProfile,
   changeProfileImg,
   getProfile,
-  getAuthorData
+  getAuthorData,
+  changePassword
 };

@@ -1,44 +1,127 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import avatar3 from "../assets/avatar3.jpg";
-import { AiFillBuild, AiFillEdit } from "react-icons/ai";
 import { UserContext } from "../context/UserContext";
+import axios from "axios";
+import { BASE_URL } from "../utl/config";
+import { toast } from "react-toastify";
+import Loader from "./Loader";
+import UploadImage from "./UploadImage";
 
 const UserProfile = () => {
   const { currentUser } = useContext(UserContext);
-
+  const [loading, setloading] = useState(false);
+  const [imageName, setimageName] = useState('')
   const [user, setuser] = useState({
-    name: currentUser?.name,
-    email: currentUser?.email,
+    name: '',
+    email:'',
     password: "",
     newPassword: "",
     confirmPassword: "",
   });
-  // const [profileImage, setprofileImage] = useState(null);
-  const [error, seterror] = useState(false);
+  const [error, seterror] = useState("");
 
   const token = currentUser?.token;
 
   const email = currentUser?.email;
+    const id = currentUser?.id;
+
+  const tok = JSON.parse(localStorage.getItem("user"));
 
   const navigate = useNavigate();
   useEffect(() => {
     if (!token) {
       navigate("/login");
+    } else {
+      const fetchPosts = async () => {
+        setloading(true);
+        try {
+          const response = await axios.get(`${BASE_URL}/users/${id}`,{
+          headers: {
+            Authorization: `Bearer ${tok.token}`,
+          },
+        });
+          setuser(response?.data.user);
+          setimageName(response?.data.user.imageName)
+        } catch (error) {
+          console.log(error.message);
+        }
+        setloading(false);
+      };
+
+      fetchPosts();
     }
   }, []);
+  if (loading) {
+    return <Loader />;
+  }
   const handleInputCahnge = (e) => {
     setuser((prevstate) => {
       return { ...prevstate, [e.target.name]: e.target.value };
     });
   };
-  const handleSubmit = () => {
-    !user.email || !user.password || !user.name || !user.confirmPassword
-      ? seterror(true)
-      : seterror(false);
-    console.log(user);
+  const updateProfile = async () => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/users/edit-profile`,
+        { name: user.name, email: user.email },
+        {
+          headers: {
+            Authorization: `Bearer ${tok.token}`,
+          },
+        }
+      );
+      const newUserData = await response.data;
+      if (newUserData.message) {
+        toast.error(newUserData.message, {
+          position: "top-center",
+          autoClose: 1000,
+          width: "800px",
+        });
+      } else {
+        toast.success(newUserData.success, {
+          position: "top-center",
+          autoClose: 1000,
+          width: "800px",
+        });
+      }
+    } catch (error) {
+      seterror(error.message,'tttttttttttttt');
+    }
   };
 
+  const changePassword = async () => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/users/edit-password`,
+        {
+          currentPassword: user.password,
+          newPassword: user.newPassword,
+          confirmNewPassword: user.confirmPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${tok.token}`,
+          },
+        }
+      );
+      const newUserData = await response.data;
+      if (newUserData.message) {
+        toast.error(newUserData.message, {
+          position: "top-center",
+          autoClose: 1000,
+          width: "800px",
+        });
+      } else {
+        toast.success(newUserData.success, {
+          position: "top-center",
+          autoClose: 1000,
+          width: "800px",
+        });
+      }
+    } catch (error) {
+      seterror(error.message);
+    }
+  };
   return (
     <div className="   max-md:mt-12 mt-16 pt-2  px-3 flex flex-col items-center ">
       <Link
@@ -47,39 +130,16 @@ const UserProfile = () => {
       >
         My Post
       </Link>
-      <div className="relative">
-        <img
-          src={avatar3}
-          alt="no image"
-          className="rounded-full max-sm:h-16 max-sm:w-16 max-md:mt-2 "
-        />
-        <AiFillEdit className="h-7 bg-white w-7 border-2 rounded-full absolute left-12 right-0 bottom-0 md:left-20 md:w-10 md:h-10" />
-      </div>
 
-      {/* <form action="">
-        <input
-          type="file"
-          accept="png ,jpg ,jpeg"
-          name="profileImage"
-          onChange={(e) => {
-            setprofileImage(e.target.files[0]);
-          }}
-        />
-        <label htmlFor="">
-          <AiFillEdit className="h-7 bg-white w-7 border-2 rounded-full absolute left-12 right-0 bottom-0 md:left-20 md:w-10 md:h-10" />
-        </label>
-        <button>
-          <AiFillBuild />
-        </button>
-      </form> */}
+
+      <UploadImage token={token} imageName={imageName}/>
+   
       <div className="flex flex-col">
-        <p
-          className={`text-red-500 italic text-xs px-16 items-center ${
-            !error ? "hidden" : ""
-          }`}
-        >
-          Please , Fill all The Fields!{" "}
-        </p>
+        {error && (
+          <p className={`text-red-500 italic text-xs px-16 items-center `}>
+            {error}
+          </p>
+        )}
         <input
           type="text"
           name="name"
@@ -95,7 +155,13 @@ const UserProfile = () => {
           value={user.email}
           onChange={handleInputCahnge}
           className="border-2 h-10 px-4 m-2 rounded-lg "
-        />
+        />{" "}
+        <button
+          className="border bg-green-800 w-fit text-slate-200 italic rounded-md px-4 py-1 mb-4 hover:bg-green-600 hover:text-white hover:scale-105 items-center ml-4"
+          onClick={updateProfile}
+        >
+          update
+        </button>
         <input
           type="password"
           placeholder="current password"
@@ -122,10 +188,10 @@ const UserProfile = () => {
         />
       </div>
       <button
-        className="border bg-gray-800 text-slate-200 italic rounded-md px-4 py-1 mb-4 hover:bg-black hover:text-white hover:scale-105"
-        onClick={handleSubmit}
+        className="border bg-red-800 text-slate-200 italic rounded-md px-4 py-1 mb-4 hover:bg-red-600 hover:text-white hover:scale-105"
+        onClick={changePassword}
       >
-        update profile
+        change password
       </button>
     </div>
   );

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BASE_URL } from "../utl/config";
 import PostView from "../utl/PostView";
-import dummyData from "../utl/dummyData";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Loader from "./Loader";

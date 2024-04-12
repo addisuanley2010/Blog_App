@@ -19,14 +19,18 @@ const postSchema = new Schema(
       ref: "users",
       required: true,
     },
-    image: {
+    imageName: {
       type: String,
-      default:'no image uploaded'
+      default: "no image uploaded",
+    },
+    imagePath: {
+      type: String,
+      default: "no path",
     },
   },
   { timestamps: true }
 );
 
-const postModel=model("posts",postSchema)
+const postModel = model("posts", postSchema);
 
-module.exports=postModel;
+module.exports = postModel;

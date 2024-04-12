@@ -7,7 +7,7 @@ const createPost = async (req, res, next) => {
 
     if (!title || !description || !catagory) {
       res.json({
-        message: "please , fill all the fields"
+        message: "please , fill all the fields",
       });
     } else {
       const newPost = await postModel.create({
@@ -61,7 +61,7 @@ const getSinglePost = async (req, res, next) => {
       });
     } else {
       res.json({
-        message: post,
+         post,
       });
     }
   } catch (error) {
@@ -151,7 +151,7 @@ const editPost = async (req, res, next) => {
             });
           } else {
             res.json({
-              message: updatedPost,
+              success: 'successfully updated',
             });
           }
         }
@@ -185,8 +185,14 @@ const deletePost = async (req, res, next) => {
             message: "post not deleted",
           });
         } else {
+          const currentUser = await userModel.findById(req.user.id);
+          const userPostCount = currentUser.posts - 1;
+          await userModel.findByIdAndUpdate(req.user.id, {
+            posts: userPostCount,
+          });
+
           res.json({
-            message: "post deleted successfully!",
+            success: "post deleted successfully!",
           });
         }
       }

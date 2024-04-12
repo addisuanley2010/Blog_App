@@ -10,7 +10,7 @@ const Login = () => {
   const [password, setpassword] = useState("");
   const [error, seterror] = useState(false);
   const navigate = useNavigate();
-
+const [loading, setloading] = useState(false)
 
 
 const {setCurrentUser}=useContext(UserContext)
@@ -43,6 +43,8 @@ const {setCurrentUser}=useContext(UserContext)
       seterror(error.message);
     }
   };
+
+
   return (
     <div className="max-md:mt-12 mt-16 pt-2  px-3 flex flex-col items-center">
       <div className="flex flex-col">

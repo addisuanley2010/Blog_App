@@ -18,12 +18,13 @@ import { ToastContainer } from "react-toastify";
 import CatagoryPosts from "./pages/CatagoryPost";
 import AuthorsPosts from "./pages/AuthorsPosts";
 import Dashboard from "./pages/Dashbord";
-import EditPost from "./pages/EditPost";
+import EditPost from "./utl/EditPost";
 import Logout from "./pages/Logout";
 
 import PostDetail from "./pages/PostDetail";
-import DeletePost from "./pages/DeletePost";
+import DeletePost from "./utl/DeletePost";
 import UserProvider from "./context/UserContext";
+import UploadImage from "./pages/UploadImage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -49,6 +50,8 @@ const router = createBrowserRouter([
       { path: "post/:id/delete", element: <DeletePost /> },
 
       { path: "post/:id/edit", element: <EditPost /> },
+            { path: "upload", element: <UploadImage /> },
+
       { path: "logout", element: <Logout /> },
     ],
   },

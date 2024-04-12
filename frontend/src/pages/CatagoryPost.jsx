@@ -1,7 +1,6 @@
 import React ,{useEffect, useState} from "react";
 
 import PostView from "../utl/PostView";
-import dummyData from "../utl/dummyData";
 import Loader from "./Loader";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "../utl/config";
