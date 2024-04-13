@@ -44,7 +44,7 @@ if(loading){
               title,
               description,
               creator,
-              thumnbinal,
+              imagePath,
             }) => (
               <PostView
                 postId={_id}
@@ -52,7 +52,7 @@ if(loading){
                 category={category}
                 title={title}
                 description={description}
-                thumnbinal={thumnbinal}
+                imagePath={imagePath}
               />
             )
           )}

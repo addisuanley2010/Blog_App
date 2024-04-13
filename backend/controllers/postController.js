@@ -162,7 +162,7 @@ const editPost = async (req, res, next) => {
             id,
             {
               title,
-            category,
+              category,
               description,
             },
             { new: true }
