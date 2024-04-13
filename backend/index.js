@@ -9,7 +9,8 @@ const { notFound, handleError } = require("./middleware/errorMiddleware");
 
 app.use(express.json());
 app.use(express.urlencoded());
-
+ 
+ 
 //default cors policy
 app.use(cors());
 
