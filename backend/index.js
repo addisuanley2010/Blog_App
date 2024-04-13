@@ -22,9 +22,10 @@ app.use(cors());
 //   })
 // );
 
-
+ 
 app.use("/api/posts", postRoutes);
 app.use("/api/users", userRoutes);
+
 
 app.use(notFound);
 app.use(handleError);
@@ -32,3 +33,4 @@ app.use(handleError);
 mongoose.connect(mongodb_url).then(() => {
   app.listen(port, () => console.log(` app listening on port ${port}`));
 });
+    

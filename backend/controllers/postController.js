@@ -91,7 +91,9 @@ const getSinglePost = async (req, res, next) => {
       message: error.message,
     });
   }
-};
+};     
+
+
 // ......................................................
 const getPostsByCatagory = async (req, res, next) => {
   try {
@@ -101,7 +103,7 @@ const getPostsByCatagory = async (req, res, next) => {
       .sort({ updatedAt: -1 });
     if (catagoryPosts == "") {
       res.json({
-        message: "no post found",
+        message: "no post found .",
       });
     } else {
       res.json({

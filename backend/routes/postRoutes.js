@@ -13,7 +13,7 @@ const {
 const authMiddleware = require("../middleware/authMiddleware");
 
 const router = Router();
-
+ 
 router.post("/",upload.single("image"),authMiddleware, createPost);
 router.get("/", getAllPosts);
 router.get("/:id", getSinglePost);
